@@ -1,0 +1,60 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>Identicon Canvas Test</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script type="text/javascript" src="identicon_canvas.js"></script>
+</head>
+<body>
+	<h2>Client-side Canvas-based Identicons</h2>
+	<canvases>
+	</canvases>
+	<a id="download"/>
+</body>
+<script>
+
+	/* START FILEHASHES */
+
+	/* END FILEHASHES */
+	
+	function createCanvases() {
+		fileHashes.forEach(fileHash => {
+			const canvas = document.createElement("canvas");
+			canvas.setAttribute("title", "identicon " + fileHash.hash);
+			canvas.setAttribute("width", "600");
+			canvas.setAttribute("height", "600");
+			canvas.setAttribute("name", fileHash.file);
+			document.getElementsByTagName("canvases")[0].appendChild(canvas);
+		});
+	}
+
+	function createDownloadPromises() {
+        const canvases = document.getElementsByTagName("canvas");
+	    const downloadPromises = [];
+	    for (const canvas of canvases) {
+    		downloadPromises.push(() => new Promise(resolve => {
+                const dataUrl = canvas.toDataURL();
+                const download = document.getElementById("download");
+                download.setAttribute("href", dataUrl);
+                download.setAttribute("download", canvas.getAttribute("name"));
+                download.click();
+                setTimeout(resolve, 250);
+			}));
+    	}
+    	return downloadPromises;
+	}
+
+	function downloadAll(downloadPromises) {
+        // Process each of the downloads in turn.
+        return downloadPromises.reduce((promise, downloadPromise) =>
+            promise.then(() => downloadPromise()), Promise.resolve());
+    }
+	
+	createCanvases();
+	render_identicon_canvases('identicon ');
+	setTimeout(() => downloadAll(createDownloadPromises(), 5000));
+</script>
+</html>
