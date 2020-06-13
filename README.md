@@ -1,6 +1,7 @@
 = To run
 
-Put mp3 files in the mp3 folder
+Put mp3 files in the mp3s folder
+npm install
 node identicon.js
 
 = To import covers
