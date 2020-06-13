@@ -14,7 +14,7 @@ function render(index, files, file, isMp3) {
     
     try {
         const Canvas = require("canvas"),
-            canvas = new Canvas(600, 600),
+            canvas = Canvas.createCanvas(600, 600),
             ctx = canvas.getContext("2d");
 
         render_identicon(ctx, hash, 600);
